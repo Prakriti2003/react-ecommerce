@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 const initialState = {
   products: [],
   status: "idle",
+  totalItems: 0,
 };
 
 // The function below is called a thunk and allows us to perform async logic. It
@@ -23,13 +24,13 @@ export const fetchAllProductsAsync = createAsyncThunk(
 
 export const fetchProductsByFilterAsync = createAsyncThunk(
   "product/fetchProductsByFilter",
-  async ({ filter, sort }) => {
+  async ({ filter, sort, pagination }) => {
     console.log(filter);
-    const response = await fetchProductsByFilter({ filter, sort });
-
-    console.log(response.data);
+    const response = await fetchProductsByFilter({ filter, sort, pagination });
+    const totalItems = response.data.items;
+    console.log(response.data.data);
     // The value we return becomes the `fulfilled` action payload
-    return response.data;
+    return { products: response.data.data, totalItems: totalItems };
   }
 );
 
@@ -62,7 +63,8 @@ export const productSlice = createSlice({
       })
       .addCase(fetchProductsByFilterAsync.fulfilled, (state, action) => {
         state.status = "idle";
-        state.products = action.payload;
+        state.products = action.payload.products;
+        state.totalItems = action.payload.totalItems;
       });
   },
 });
@@ -73,5 +75,6 @@ export const { increment } = productSlice.actions;
 // the state. Selectors can also be defined inline where they're used instead of
 // in the slice file. For example: `useSelector((state: RootState) => state.product.value)`
 export const selectAllProducts = (state) => state.product.products;
+export const selectTotalItems = (state) => state.product.totalItems;
 
 export default productSlice.reducer;

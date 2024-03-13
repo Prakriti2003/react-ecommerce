@@ -7,9 +7,10 @@ export function fetchAllProducts() {
   });
 }
 
-export function fetchProductsByFilter({ filter, sort }) {
+export function fetchProductsByFilter({ filter, sort, pagination }) {
   // filter = {category:[smatphone, laptops]}
   // sort = {_sort : '-ratings'}
+  //pagination = {_page:1, _limit: 10}
   //TODO : on server we will support multi values
   console.log(filter);
   let queryString = "";
@@ -23,12 +24,16 @@ export function fetchProductsByFilter({ filter, sort }) {
   for (let key in sort) {
     queryString += `${key}=${sort[key]}&`;
   }
-
+  console.log(pagination);
+  for (let key in pagination) {
+    queryString += `${key}=${pagination[key]}&`;
+  }
   console.log(queryString);
 
   return new Promise(async (resolve) => {
     const response = await fetch(
       "http://localhost:8080/products?" + queryString
+      // "https://dummyjson.com/products?skip=20&_limit=10&"
     );
     const data = await response.json();
     resolve({ data });
