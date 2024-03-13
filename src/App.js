@@ -8,7 +8,7 @@ import * as ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./index.css";
 import Checkout from "./pages/Checkout";
-import ProductDetail from "./features/product-list/components/ProductDetail";
+import ProductDetail from "./features/product/components/ProductDetail";
 import ProductDetailPage from "./pages/ProductDetailPage";
 
 const router = createBrowserRouter([
